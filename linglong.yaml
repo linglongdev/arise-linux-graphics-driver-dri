@@ -1,0 +1,61 @@
+version: "1"
+
+package:
+  id: com.glenfly.driver.display.arise
+  name: arise-linux-graphics-driver-dri
+  version: 1.0.0.2
+  kind: extension
+  description: |
+    Graphics driver for glenfly arise series
+  extension_of: org.deepin.base/25.2.0
+  env:
+    __EGL_VENDOR_LIBRARY_DIRS: $ORIGIN:$PREFIX/glvnd/egl_vendor.d
+    LIBGL_DRIVERS_PATH: $ORIGIN:$PREFIX/lib/dri
+    GBM_BACKENDS_PATH: $ORIGIN:$PREFIX/lib/gbm
+
+permissions:
+  innerBinds:
+    - source: /opt/extensions/com.glenfly.driver.display.arise/glvnd/egl_vendor.d/10_arise.json
+      destination: /usr/share/glvnd/egl_vendor.d/10_arise.json
+
+base: org.deepin.base/25.2.0
+
+#set the runtime environment if you need, a example of setting deepin runtime is as follows.
+#runtime:
+#org.deepin.runtime.dtk/23.1.0
+
+#set the source if you need, a simple example of git is as follows.
+sources:
+  - kind: file
+    url: https://pools.uniontech.com/desktop-professional-V25/pool/main/a/arise-linux-graphics-driver-dri/arise-linux-graphics-driver-dri_25.00.36_amd64.deb
+    digest: ee9b6093b4fdd066a8957ec5dc3db17f3d8b57a8f8f082781b4d7c54aa3a1886
+    name: arise-linux-graphics-driver-dri.deb
+
+build: |
+  echo 'hello' #some operation to build this project
+
+  PACKAGE=/project/linglong/sources/arise-linux-graphics-driver-dri.deb
+
+  rm -rf extracted
+  dpkg-deb -R ${PACKAGE} extracted
+
+  cp -r extracted/usr/lib/${TRIPLET} $PREFIX/lib
+
+  mkdir -p $PREFIX/etc
+  cp ld.so.conf $PREFIX/etc/
+
+  mkdir -p $PREFIX/glvnd/egl_vendor.d/
+  cat > $PREFIX/glvnd/egl_vendor.d/10_arise.json << EOF
+  {
+      "file_format_version" : "1.0.0",
+      "ICD" : {
+          "library_path" : "libEGL_arise.so.0"
+      }
+  }
+  EOF
+
+  ldconfig
+
+buildext:
+  apt:
+    build_depends: []
