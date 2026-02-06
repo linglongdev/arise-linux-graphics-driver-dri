@@ -12,6 +12,9 @@ package:
     __EGL_VENDOR_LIBRARY_DIRS: $ORIGIN:$PREFIX/glvnd/egl_vendor.d
     LIBGL_DRIVERS_PATH: $ORIGIN:$PREFIX/lib/dri
     GBM_BACKENDS_PATH: $ORIGIN:$PREFIX/lib/gbm
+    LIBVA_DRIVERS_PATH: $ORIGIN:$PREFIX/lib/dri
+    VDPAU_DRIVER_PATH: $ORIGIN:$PREFIX/lib/vdpau
+
 
 permissions:
   innerBinds:
